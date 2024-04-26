@@ -1,12 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-
+  // const [error, setError] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const { loading, error } = useSelector((state) => state.user);
+  console.log(loading, error);
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Initialization
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.id]: event.target.value });
@@ -15,7 +23,8 @@ const SignIn = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      setLoading(true);
+      // setLoading(true);
+      dispatch(signInStart());
       const response = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -24,17 +33,23 @@ const SignIn = () => {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      setLoading(false);
+      // setLoading(false);
+      dispatch(signInSuccess(data));
       if (data.success === false) {
-        setError(true);
+        // setError(true);
+        dispatch(signInFailure(data));
         return;
       }
+      dispatch(signInSuccess(data));
       navigate("/");
       // console.log(data);
-      setError(false);
+      // setError(false);
+      dispatch(signInFailure());
     } catch (error) {
-      setLoading(false);
-      setError(true);
+      // setLoading(false);
+      // setError(true);
+      // dispatch(signInStart())
+      dispatch(signInFailure(error));
     }
 
     // console.log(data);
@@ -72,7 +87,7 @@ const SignIn = () => {
           </span>
         </div>
         <p className="text-red-700 mt-5 font-semibold">
-          {error && "Something went wrong...."}
+          {error ? error.message || "Something went wrong...." : ""}
         </p>
       </div>
     </>
