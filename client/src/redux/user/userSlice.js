@@ -13,7 +13,7 @@ const userSlice = createSlice({
     initialState,
     reducers:{
         signInStart: (state) =>{
-            state.loading = true; // This line should be updated
+            state.loading = true; 
         },
         signInSuccess: (state, action) =>{
             state.currentUser = action.payload;
@@ -27,6 +27,6 @@ const userSlice = createSlice({
     }
 })
 
-// Corrected export statements
+
 export const { signInStart, signInSuccess, signInFailure } = userSlice.actions;
 export default userSlice.reducer;
