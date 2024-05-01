@@ -1,7 +1,7 @@
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "@firebase/auth";
 import { app } from "../firebase";
 import { useDispatch } from "react-redux";
-
+import { signInSuccess } from "../redux/user/userSlice";
 const OAuth = () => {
   // INITIALIZING DISPATCH
   const dispatch = useDispatch();
@@ -10,7 +10,7 @@ const OAuth = () => {
       const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
-      const response = await fetch("/api/google/auth", {
+      const response = await fetch("/api/auth/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -22,9 +22,9 @@ const OAuth = () => {
         }),
       });
       const data = await response.json();
+      console.log(result);
       // eslint-disable-next-line no-undef
       dispatch(signInSuccess(data));
-      //   console.log(result);
     } catch (error) {
       console.log("couldn't connect to Google", error);
     }
