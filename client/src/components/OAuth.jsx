@@ -18,12 +18,11 @@ const OAuth = () => {
         body: JSON.stringify({
           name: result.user.displayName,
           email: result.user.email,
-          photo: result.user.photoURL,
+          profilePicture: result.user.photoURL,
         }),
       });
       const data = await response.json();
       console.log(result);
-      // eslint-disable-next-line no-undef
       dispatch(signInSuccess(data));
     } catch (error) {
       console.log("couldn't connect to Google", error);
